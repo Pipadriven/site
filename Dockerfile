@@ -6,7 +6,7 @@ WORKDIR /app
 # ATENÇÃO: no Vite as variáveis VITE_* são embutidas no bundle em TEMPO DE BUILD.
 # Por isso precisam chegar aqui como ARG — configurar só no painel do EasyPanel
 # NÃO funciona, o site sobe e o formulário falha silenciosamente.
-ARG VITE_LEAD_WEBHOOK_URL
+ARG VITE_LEAD_WEBHOOK_URL="https://pipadriven-n8n-webhook.5kksqf.easypanel.host/webhook/lead-site"
 ENV VITE_LEAD_WEBHOOK_URL=$VITE_LEAD_WEBHOOK_URL
 
 COPY package.json package-lock.json ./

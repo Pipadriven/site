@@ -1,0 +1,1 @@
+DROP POLICY "Authenticated users can view leads" ON public.leads;

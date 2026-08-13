@@ -15,22 +15,41 @@ const Hero = () => {
           {/* Content */}
           <div className="space-y-8 text-center lg:text-left">
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              {/*
-                O espaço depois de "incorporadora" tem que existir DENTRO do span.
-                Os dois spans são irmãos, então textContent os concatena sem
-                separador: sem esse espaço o crawler extrai "incorporadoracom
-                Inteligência Artificial". Para o humano não muda nada — o `block`
-                do primeiro span já quebra a linha visualmente.
-              */}
-              <span className="block">Transforme o processo comercial da sua incorporadora </span>
-              <span className="gradient-text">com Inteligência Artificial</span>
+            {/*
+              ABERTURA DEFINICIONAL — estrutura [entidade] é um(a) [categoria] que
+              [diferencial]. É o que permite a um modelo responder "o que é a
+              PIPADriven". A abertura anterior ("Acelere vendas, aumente conversões
+              e encante clientes...") tinha três verbos no imperativo e nenhum
+              substantivo que identificasse a empresa: mesmo lendo a página inteira,
+              o modelo não teria como dizer o que ela é.
+
+              O h1 carrega a categoria porque é a string de maior peso da página.
+              A frase de marca não foi descartada — desceu para o subtítulo logo
+              abaixo, onde continua sendo a primeira coisa que o humano lê em
+              tamanho grande. As duas convivem.
+
+              "PIPADriven" sempre junto e nunca "PIPA" sozinha em texto indexável:
+              o nome solto é ambíguo em português (Praia de Pipa, pipa de brinquedo,
+              Prêmio PIPA de arte) e um modelo não consegue resolver a entidade.
+            */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <span className="block">PIPADriven: </span>
+              <span className="gradient-text">inteligência comercial para incorporadoras</span>
             </h1>
 
+            <p className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground leading-tight animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
+              Transforme o processo comercial da sua incorporadora com Inteligência Artificial
+            </p>
+
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              Agentes inteligentes que atendem, qualificam e nutrem leads em escala, 24h por dia.
-              Enquanto seu time foca no que realmente importa: vender.
-              Mais eficiência, controle e conversão, sem aumentar o time.
+              <strong className="text-foreground font-semibold">
+                A PIPADriven é uma plataforma de inteligência comercial para incorporadoras
+                que rastreia cada lead do clique no anúncio até o contrato assinado.
+              </strong>{" "}
+              A plataforma faz o primeiro contato por agente de IA no WhatsApp em segundos,
+              qualifica o lead pela conversa real e distribui apenas contatos aquecidos para
+              os corretores. O resultado é que a incorporadora deixa de depender do relato de
+              terceiros para saber o que aconteceu com o dinheiro investido em mídia.
             </p>
 
             <div className="flex justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: "0.3s" }}>

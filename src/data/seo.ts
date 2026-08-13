@@ -13,6 +13,8 @@
  * renders — evita que o efeito do useSeo rode à toa a cada render.
  */
 
+import { FAQ_HOME } from "@/data/faq";
+
 export const HOME_SEO = {
   title: "PIPADriven | Inteligência comercial para incorporadoras",
   description:
@@ -62,8 +64,27 @@ export const HOME_JSONLD = {
       inLanguage: "pt-BR",
       publisher: { "@id": "https://pipadriven.com.br/#organization" },
     },
+    /**
+     * FAQPage gerado a partir de FAQ_HOME — o MESMO array que renderiza o texto
+     * visível em components/landing/Faq.tsx.
+     *
+     * Isso não é elegância, é requisito: a diretriz do Google exige que a
+     * resposta no dado estruturado seja idêntica à que o usuário lê na página,
+     * e FAQ que só existe no schema é violação passível de penalidade manual.
+     * Derivando os dois do mesmo lugar, é impossível um sair do outro.
+     */
+    {
+      "@type": "FAQPage",
+      "@id": "https://pipadriven.com.br/#faq",
+      isPartOf: { "@id": "https://pipadriven.com.br/#website" },
+      mainEntity: FAQ_HOME.map((item) => ({
+        "@type": "Question",
+        name: item.pergunta,
+        acceptedAnswer: { "@type": "Answer", text: item.resposta },
+      })),
+    },
   ],
-} as const;
+};
 
 type SolutionSeo = {
   title: string;

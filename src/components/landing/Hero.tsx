@@ -16,7 +16,14 @@ const Hero = () => {
           <div className="space-y-8 text-center lg:text-left">
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              <span className="block">Transforme o processo comercial da sua incorporadora</span>
+              {/*
+                O espaço depois de "incorporadora" tem que existir DENTRO do span.
+                Os dois spans são irmãos, então textContent os concatena sem
+                separador: sem esse espaço o crawler extrai "incorporadoracom
+                Inteligência Artificial". Para o humano não muda nada — o `block`
+                do primeiro span já quebra a linha visualmente.
+              */}
+              <span className="block">Transforme o processo comercial da sua incorporadora </span>
               <span className="gradient-text">com Inteligência Artificial</span>
             </h1>
 

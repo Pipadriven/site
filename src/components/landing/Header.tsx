@@ -7,11 +7,24 @@ import { whatsappUrl, trackWhatsAppClick } from "@/lib/whatsapp";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  /**
+   * Os href são "/#secao" e não "#secao".
+   *
+   * Âncora relativa só funciona se a seção existir NA PÁGINA ATUAL. Nas quatro
+   * rotas /solucoes/* não existe #solutions nem #faq, então esses links não
+   * levavam a lugar nenhum — e agora que as 5 rotas são pré-renderizadas e
+   * rastreadas, isso é link interno quebrado em 4 delas, na navegação principal.
+   * Com a barra na frente, o link volta para a home e desce até a seção.
+   *
+   * O FAQ entrou no menu; Problema, Dados e Comparativo não. São seções que se
+   * leem no fluxo da página, e um menu com 8 itens não destaca nenhum.
+   */
   const navLinks = [
-    { label: "Soluções", href: "#solutions" },
-    { label: "Sobre", href: "#about" },
-    { label: "Recursos", href: "#features" },
-    { label: "Contato", href: "#contact" },
+    { label: "Soluções", href: "/#solutions" },
+    { label: "Sobre", href: "/#about" },
+    { label: "Recursos", href: "/#features" },
+    { label: "FAQ", href: "/#faq" },
+    { label: "Contato", href: "/#contact" },
   ];
 
   return (
@@ -24,7 +37,7 @@ const Header = () => {
             <span className="text-muted-foreground ml-2">
               Potencialize seus resultados com inteligência artificial.
             </span>
-            <a href="#contact" className="text-primary hover:underline ml-2 font-medium">
+            <a href="/#contact" className="text-primary hover:underline ml-2 font-medium">
               Saiba mais →
             </a>
           </p>

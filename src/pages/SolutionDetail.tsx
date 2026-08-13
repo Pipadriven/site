@@ -5,12 +5,16 @@ import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
 import { getSolutionBySlug } from "@/data/solutions";
 import { getSolutionSeo } from "@/data/seo";
+import { getSolucaoGeo } from "@/data/solucoes-geo";
+import SolucaoGeoBlocos from "@/components/landing/SolucaoGeoBlocos";
 import { useSeo } from "@/lib/seo";
 import { useEffect, useMemo } from "react";
 
 const SolutionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const solution = getSolutionBySlug(slug);
+  // Não é hook: pode ficar aqui em cima sem afetar a ordem dos hooks abaixo.
+  const geo = solution ? getSolucaoGeo(solution.slug) : undefined;
 
   // Hooks antes de qualquer return: o caminho "solução não encontrada"
   // também precisa de metadado próprio, senão herda o da última rota visitada.
@@ -113,15 +117,34 @@ const SolutionDetail = () => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="gradient-text">{solution.title}</span>
+            {/*
+              O <h1> vem do solucoes-geo.ts quando existe. O anterior era só o
+              nome do módulo ("Captação Inteligente") — sem categoria, sem
+              público, sem a entidade. Um modelo lendo aquele h1 não tinha como
+              ligar o módulo à PIPADriven nem saber do que a página trata.
+              Slug sem conteúdo GEO cai no título de antes.
+            */}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+              <span className="gradient-text">{geo ? geo.h1 : solution.title}</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              {solution.longDescription}
-            </p>
+
+            {geo ? (
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                <strong className="text-foreground font-semibold">
+                  {geo.aberturaDefinicional.destaque}
+                </strong>{" "}
+                {geo.aberturaDefinicional.complemento}
+              </p>
+            ) : (
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                {solution.longDescription}
+              </p>
+            )}
           </div>
         </div>
       </section>
+
+      {geo && <SolucaoGeoBlocos geo={geo} />}
 
       {/* Benefits */}
       <section className="py-16">

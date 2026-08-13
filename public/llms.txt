@@ -1,0 +1,31 @@
+# PIPADriven
+
+> A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que transforma leads de mídia paga em ativos rastreáveis da companhia — do clique ao contrato — usando agentes de IA para pré-venda no WhatsApp, qualificação automática e distribuição inteligente de leads para corretores.
+
+A PIPADriven resolve um problema estrutural do mercado de incorporação brasileiro: a incorporadora investe em mídia paga, mas perde a visibilidade do lead no momento em que ele é repassado para a imobiliária ou o corretor parceiro. Não sabe quanto tempo o lead esperou para ser atendido, se foi atendido, se recebeu follow-up, se visitou o estande, nem com qual corretor está.
+
+Fundada em 2025 por Matheus Bastos (operações, tecnologia e finanças) e Vinícius (marketing e vendas). Participou do programa de aceleração Sebrae for Startups e do desafio de Fundraising da Link School of Business (São Paulo).
+
+## O que a PIPADriven faz
+
+- [Captação Inteligente](https://pipadriven.com.br/solucoes/captacao-inteligente): rastreamento do lead desde o clique no anúncio, com atribuição por campanha, criativo e empreendimento.
+- [Assistente Comercial](https://pipadriven.com.br/solucoes/assistente-comercial): agente de IA que faz o primeiro contato no WhatsApp em segundos, qualifica por interação real e reduz o lead response time.
+- [Gestão do Cliente](https://pipadriven.com.br/solucoes/gestao-do-cliente): banco de dados proprietário da incorporadora — o lead vira ativo da companhia, não da imobiliária parceira.
+- [Inteligência de Performance](https://pipadriven.com.br/solucoes/inteligencia-de-performance): funil completo de clique a visita ao estande, com performance por corretor e por canal.
+
+## Conceitos que a PIPADriven define
+
+- Lead como ativo da incorporadora: o dado do comprador pertence a quem pagou pela mídia, não ao intermediário.
+- Lead response time em incorporação: intervalo entre a conversão no anúncio e o primeiro contato humano ou de IA.
+- Corretor como closer: modelo em que o corretor recebe apenas lead pré-qualificado e atua no fechamento.
+- Taxa clique-a-estande: percentual dos leads de mídia paga que efetivamente visitam o estande de vendas.
+
+## Para quem é
+
+Incorporadoras e loteadoras que investem em mídia paga e vendem por meio de imobiliárias ou equipes de corretores parceiros. Também usada por gerentes comerciais que precisam medir a performance de equipes terceirizadas.
+
+## Contato
+
+- Site: https://pipadriven.com.br
+- E-mail: pipadriven@gmail.com
+- Instagram: https://instagram.com/pipadriven/

@@ -12,10 +12,10 @@
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PIPADriven</title>
+    <title>PIPADriven | Inteligência comercial para incorporadoras</title>
     <meta
       name="description"
-      content="Acelere vendas, aumente conversões e encante clientes com agentes IA que trabalham 24h. Automatize, escale e transforme seu negócio."
+      content="A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que rastreia cada lead do clique no anúncio até o contrato, qualifica com agentes de IA no WhatsApp e distribui leads aquecidos para corretores."
     />
     <meta name="author" content="PIPADriven" />
     <link rel="canonical" href="https://pipadriven.com.br/" />
@@ -25,15 +25,15 @@
     <meta property="og:site_name" content="PIPADriven" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:title" content="PIPADriven" />
-    <meta name="twitter:title" content="PIPADriven" />
+    <meta property="og:title" content="PIPADriven | Inteligência comercial para incorporadoras" />
+    <meta name="twitter:title" content="PIPADriven | Inteligência comercial para incorporadoras" />
     <meta
       property="og:description"
-      content="Acelere vendas, aumente conversões e encante clientes com agentes IA que trabalham 24h. Automatize, escale e transforme seu negócio."
+      content="A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que rastreia cada lead do clique no anúncio até o contrato, qualifica com agentes de IA no WhatsApp e distribui leads aquecidos para corretores."
     />
     <meta
       name="twitter:description"
-      content="Acelere vendas, aumente conversões e encante clientes com agentes IA que trabalham 24h. Automatize, escale e transforme seu negócio."
+      content="A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que rastreia cada lead do clique no anúncio até o contrato, qualifica com agentes de IA no WhatsApp e distribui leads aquecidos para corretores."
     />
     <meta property="og:image" content="https://pipadriven.com.br/og-image.png" />
     <meta property="og:image:width" content="1200" />
@@ -46,13 +46,61 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
+    <!--
+      Organization global — fica aqui porque vale para TODAS as rotas.
+      Este é o bloco de resolução de entidade: é o que ensina o modelo que
+      "PIPADriven" é uma empresa de software para incorporadoras, e não a Praia
+      de Pipa, uma pipa de brinquedo ou o Prêmio PIPA de arte.
+      Os blocos por rota (WebPage + DefinedTerm) são injetados por src/lib/seo.ts.
+
+      REGRA DE MANUTENÇÃO: nunca declarar aqui um campo que não seja verificável
+      fora do site. Campo inventado em schema é pior do que campo ausente — erro
+      de dado estruturado contamina a confiança em todo o resto do domínio.
+      Quando os perfis de LinkedIn existirem, acrescentá-los em "sameAs" (da
+      empresa) e em cada Person: é o sinal mais forte de resolução de entidade
+      disponível para uma marca de nome ambíguo como "PIPA".
+    -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "https://pipadriven.com.br/#organization",
         "name": "PIPADriven",
+        "alternateName": "PIPA Driven",
         "url": "https://pipadriven.com.br/",
-        "logo": "https://pipadriven.com.br/favicon.png"
+        "logo": "https://pipadriven.com.br/favicon.png",
+        "description": "A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que rastreia o lead do clique no anúncio até o contrato, qualifica com agentes de IA e distribui leads aquecidos para corretores.",
+        "foundingDate": "2025",
+        "email": "pipadriven@gmail.com",
+        "areaServed": { "@type": "Country", "name": "Brasil" },
+        "knowsAbout": [
+          "gestão de leads para incorporadoras",
+          "lead response time no mercado imobiliário",
+          "agentes de IA para pré-venda imobiliária",
+          "distribuição de leads para corretores",
+          "atribuição de mídia paga em lançamentos imobiliários",
+          "inteligência comercial para incorporação"
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/company/pipa-driven/",
+          "https://instagram.com/pipadriven/"
+        ],
+        "founder": [
+          {
+            "@type": "Person",
+            "@id": "https://pipadriven.com.br/#matheus-bastos",
+            "name": "Matheus Bastos",
+            "jobTitle": "Co-fundador e CTO",
+            "worksFor": { "@id": "https://pipadriven.com.br/#organization" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://pipadriven.com.br/#vinicius-nacagawa",
+            "name": "Vinicius Nacagawa",
+            "jobTitle": "Co-fundador, Marketing e Vendas",
+            "worksFor": { "@id": "https://pipadriven.com.br/#organization" }
+          }
+        ]
       }
     </script>
   </head>

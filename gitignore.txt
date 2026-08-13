@@ -1,0 +1,36 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Ambiente — nunca commitar segredo
+.env
+.env.local
+.env.*.local
+
+# Editor / SO
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

@@ -4,17 +4,64 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
 import { getSolutionBySlug } from "@/data/solutions";
-import { useEffect } from "react";
+import { getSolutionSeo } from "@/data/seo";
+import { useSeo } from "@/lib/seo";
+import { useEffect, useMemo } from "react";
 
 const SolutionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const solution = getSolutionBySlug(slug);
 
+  // Hooks antes de qualquer return: o caminho "solução não encontrada"
+  // também precisa de metadado próprio, senão herda o da última rota visitada.
+  const seo = useMemo(() => {
+    if (!solution) {
+      return {
+        title: "Solução não encontrada | PIPADriven",
+        description:
+          "A solução que você procura não existe ou foi movida. Veja as soluções da PIPADriven para incorporadoras.",
+        term: null as null | { name: string; description: string },
+      };
+    }
+    return getSolutionSeo(solution.slug, solution.title, solution.longDescription);
+  }, [solution]);
+
+  const jsonLd = useMemo(() => {
+    if (!solution || !seo.term) return undefined;
+    const url = `https://pipadriven.com.br/solucoes/${solution.slug}`;
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": `${url}#webpage`,
+      url,
+      name: solution.title,
+      description: seo.description,
+      inLanguage: "pt-BR",
+      isPartOf: { "@id": "https://pipadriven.com.br/#website" },
+      about: {
+        "@type": "DefinedTerm",
+        name: seo.term.name,
+        description: seo.term.description,
+      },
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Início", item: "https://pipadriven.com.br/" },
+          { "@type": "ListItem", position: 2, name: solution.title, item: url },
+        ],
+      },
+    } as Record<string, unknown>;
+  }, [solution, seo]);
+
+  useSeo({
+    title: seo.title,
+    description: seo.description,
+    path: solution ? `/solucoes/${solution.slug}` : "/",
+    jsonLd,
+  });
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-    if (solution) {
-      document.title = `${solution.title} | PIPADriven`;
-    }
   }, [solution]);
 
   if (!solution) {

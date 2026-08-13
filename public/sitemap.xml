@@ -1,8 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  <lastmod> substitui <priority>: priority é ignorado pelos motores há anos,
+  lastmod é usado de verdade como sinal de frescor.
+  Regra: só atualizar a data quando o conteúdo mudar de fato. Data falsa em
+  lastmod é detectada e o domínio inteiro perde confiança no sinal.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://pipadriven.com.br/</loc><priority>1.0</priority></url>
-  <url><loc>https://pipadriven.com.br/solucoes/captacao-inteligente</loc><priority>0.8</priority></url>
-  <url><loc>https://pipadriven.com.br/solucoes/assistente-comercial</loc><priority>0.8</priority></url>
-  <url><loc>https://pipadriven.com.br/solucoes/gestao-do-cliente</loc><priority>0.8</priority></url>
-  <url><loc>https://pipadriven.com.br/solucoes/inteligencia-de-performance</loc><priority>0.8</priority></url>
+  <url>
+    <loc>https://pipadriven.com.br/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://pipadriven.com.br/solucoes/captacao-inteligente</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://pipadriven.com.br/solucoes/assistente-comercial</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://pipadriven.com.br/solucoes/gestao-do-cliente</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://pipadriven.com.br/solucoes/inteligencia-de-performance</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
 </urlset>

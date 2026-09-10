@@ -34,3 +34,7 @@ logs/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Local Sites tooling and temporary validation
+.sites-runtime/
+.verify-tmp/

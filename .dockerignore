@@ -13,3 +13,7 @@ bun.lockb
 supabase
 README.md
 DEPLOY.md
+.sites-runtime
+.openai
+.verify-tmp
+docs

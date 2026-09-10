@@ -1,148 +1,42 @@
-/**
- * Textos de SEO/GEO por rota.
- *
- * Separado de solutions.ts de propósito: aqui é copy de metadado, lá é copy de
- * interface. Editar um não deve arriscar quebrar o outro.
- *
- * Padrão das descriptions: [Entidade] é um(a) [categoria] que [diferencial].
- * É o que permite a um modelo de linguagem responder "o que é X" — a description
- * anterior ("Acelere vendas, aumente conversões...") tem três verbos no
- * imperativo e nenhum substantivo que identifique a empresa.
- *
- * Os objetos são constantes de módulo para manter referência estável entre
- * renders — evita que o efeito do useSeo rode à toa a cada render.
- */
+import { solutions } from "@/data/solutions";
+import { articles } from "@/data/articles";
+import { FAQ_HOME, type FaqItem } from "@/data/faq";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, UPDATED_AT } from "@/data/site";
 
-import { FAQ_HOME } from "@/data/faq";
-
-export const HOME_SEO = {
-  title: "PIPADriven | Inteligência comercial para incorporadoras",
-  description:
-    "A PIPADriven é uma plataforma de inteligência comercial para incorporadoras que rastreia cada lead do clique no anúncio até o contrato, qualifica com agentes de IA no WhatsApp e distribui leads aquecidos para corretores.",
-  path: "/",
-} as const;
-
-/**
- * SoftwareApplication + WebSite da home.
- * Ambos apontam para o Organization declarado no index.html via @id — é isso
- * que amarra os três num grafo só em vez de três entidades soltas.
- */
-export const HOME_JSONLD = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://pipadriven.com.br/#software",
-      name: "PIPADriven",
-      applicationCategory: "BusinessApplication",
-      applicationSubCategory:
-        "Plataforma de inteligência comercial para incorporadoras",
-      operatingSystem: "Web",
-      url: "https://pipadriven.com.br/",
-      publisher: { "@id": "https://pipadriven.com.br/#organization" },
-      description:
-        "Plataforma que unifica captação, qualificação por IA e distribuição de leads para incorporadoras que vendem por meio de imobiliárias e corretores parceiros.",
-      featureList: [
-        "Rastreamento de lead do clique no anúncio até a visita ao estande",
-        "Agente de IA para primeiro contato no WhatsApp em segundos",
-        "Qualificação de lead baseada em interação real de conversa",
-        "Distribuição automática de leads qualificados para corretores",
-        "Banco de dados próprio da incorporadora, independente da imobiliária parceira",
-        "Medição de lead response time por corretor e por equipe",
-      ],
-      audience: {
-        "@type": "BusinessAudience",
-        audienceType:
-          "Incorporadoras, loteadoras e gestores comerciais de lançamentos imobiliários",
-      },
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://pipadriven.com.br/#website",
-      url: "https://pipadriven.com.br/",
-      name: "PIPADriven",
-      inLanguage: "pt-BR",
-      publisher: { "@id": "https://pipadriven.com.br/#organization" },
-    },
-    /**
-     * FAQPage gerado a partir de FAQ_HOME — o MESMO array que renderiza o texto
-     * visível em components/landing/Faq.tsx.
-     *
-     * Isso não é elegância, é requisito: a diretriz do Google exige que a
-     * resposta no dado estruturado seja idêntica à que o usuário lê na página,
-     * e FAQ que só existe no schema é violação passível de penalidade manual.
-     * Derivando os dois do mesmo lugar, é impossível um sair do outro.
-     */
-    {
-      "@type": "FAQPage",
-      "@id": "https://pipadriven.com.br/#faq",
-      isPartOf: { "@id": "https://pipadriven.com.br/#website" },
-      mainEntity: FAQ_HOME.map((item) => ({
-        "@type": "Question",
-        name: item.pergunta,
-        acceptedAnswer: { "@type": "Answer", text: item.resposta },
-      })),
-    },
-  ],
+export type PageSeo = {title:string;description:string;path:string;jsonLd:Record<string,unknown>;noIndex?:boolean;type?:"website"|"article"};
+const orgId=SITE_URL+"/#organization";
+export const ORGANIZATION = {
+ "@type":"Organization","@id":orgId,name:SITE_NAME,alternateName:"PIPA Driven",url:SITE_URL+"/",
+ logo:SITE_URL+"/favicon.png",description:SITE_DESCRIPTION,email:"pipadriven@gmail.com",
+ areaServed:{"@type":"Country",name:"Brasil"},
+ sameAs:["https://www.linkedin.com/company/pipa-driven/","https://www.instagram.com/pipadriven/"],
+ knowsAbout:["inteligência comercial para incorporadoras","pré-vendas com inteligência artificial","gestão da rede de corretores parceiros","gestão de mídia imobiliária","indicadores comerciais"]
 };
-
-type SolutionSeo = {
-  title: string;
-  description: string;
-  /** Conceito que a página quer possuir na cabeça do modelo. */
-  term: { name: string; description: string };
-};
-
-export const SOLUTION_SEO: Record<string, SolutionSeo> = {
-  "captacao-inteligente": {
-    title: "Captação Inteligente: rastreamento de lead do clique ao estande | PIPADriven",
-    description:
-      "Captação Inteligente é o módulo da PIPADriven que registra a origem de cada lead de incorporadora por campanha, criativo e empreendimento, e mantém esse rastro ativo até a visita ao estande de vendas.",
-    term: {
-      name: "Atribuição de lead em lançamento imobiliário",
-      description:
-        "Prática de manter a origem de mídia de um lead associada a ele durante toda a jornada comercial, permitindo calcular o custo real por visita ao estande e por venda, e não apenas o custo por lead.",
-    },
-  },
-  "assistente-comercial": {
-    title: "Assistente Comercial: agente de IA que atende o lead em segundos | PIPADriven",
-    description:
-      "Assistente Comercial é o agente de IA da PIPADriven que faz o primeiro contato com o lead da incorporadora em segundos, qualifica pela conversa e organiza o pipeline antes de o corretor assumir.",
-    term: {
-      name: "Lead response time em incorporação imobiliária",
-      description:
-        "Intervalo entre a conversão do lead em uma campanha de mídia e o primeiro contato efetivo com esse lead. Em lançamentos imobiliários brasileiros esse intervalo frequentemente ultrapassa 12 horas quando o atendimento depende exclusivamente do corretor.",
-    },
-  },
-  "gestao-do-cliente": {
-    title: "Gestão do Cliente: o lead como ativo da incorporadora | PIPADriven",
-    description:
-      "Gestão do Cliente é o módulo da PIPADriven em que a incorporadora mantém o histórico completo de cada cliente após a compra, transformando o pós-venda em base para recompra e indicação.",
-    term: {
-      name: "Lead como ativo da incorporadora",
-      description:
-        "Princípio segundo o qual o dado do comprador gerado por mídia paga pertence à incorporadora que financiou a campanha, e deve permanecer acessível a ela mesmo após o fim da parceria com a imobiliária que fez o atendimento.",
-    },
-  },
-  "inteligencia-de-performance": {
-    title: "Inteligência de Performance: onde o funil comercial vaza | PIPADriven",
-    description:
-      "Inteligência de Performance é o módulo analítico da PIPADriven que mostra à incorporadora onde o funil comercial vaza — por campanha, empreendimento e corretor — do clique no anúncio até o contrato.",
-    term: {
-      name: "Taxa de clique-a-estande",
-      description:
-        "Percentual dos leads gerados por mídia paga que efetivamente comparecem ao estande de vendas de um empreendimento. Métrica que conecta investimento de marketing a comportamento real de compra.",
-    },
-  },
-};
-
-/** Fallback para slug sem entrada acima — nunca deixa a rota sem metadado próprio. */
-export function getSolutionSeo(slug: string, fallbackTitle: string, fallbackDescription: string) {
-  return (
-    SOLUTION_SEO[slug] ?? {
-      title: `${fallbackTitle} | PIPADriven`,
-      description: fallbackDescription,
-      term: { name: fallbackTitle, description: fallbackDescription },
-    }
-  );
+function breadcrumbs(path:string,label:string,parent?:{path:string;label:string}){
+ const items=[{name:"Início",item:SITE_URL+"/"},...(parent?[{name:parent.label,item:SITE_URL+parent.path}]:[]),{name:label,item:SITE_URL+path}];
+ return {"@type":"BreadcrumbList","@id":SITE_URL+path+"#breadcrumb",itemListElement:items.map((x,i)=>({"@type":"ListItem",position:i+1,...x}))};
 }
+function faqSchema(items:FaqItem[],path:string){return {"@type":"FAQPage","@id":SITE_URL+path+"#faq",mainEntity:items.map(x=>({"@type":"Question",name:x.pergunta,acceptedAnswer:{"@type":"Answer",text:x.resposta}}))};}
+export function getPageSeo(rawPath:string):PageSeo{
+ const path=rawPath==="/"?"/":rawPath.replace(/\/+$/,"");
+ let title="PIPADriven | Inteligência comercial para incorporadoras",description=SITE_DESCRIPTION,type:"website"|"article"="website",noIndex=false;
+ const graph:Record<string,unknown>[]=[ORGANIZATION,{"@type":"WebSite","@id":SITE_URL+"/#website",url:SITE_URL+"/",name:SITE_NAME,inLanguage:"pt-BR",publisher:{"@id":orgId}}];
+ let label="Início";
+ if(path==="/"){
+   graph.push({"@type":"Service","@id":SITE_URL+"/#servicos",name:"Inteligência comercial para incorporadoras",provider:{"@id":orgId},description:SITE_DESCRIPTION,areaServed:{"@type":"Country",name:"Brasil"},hasOfferCatalog:{"@type":"OfferCatalog",name:"Soluções PIPADriven",itemListElement:solutions.map(s=>({"@type":"Offer",itemOffered:{"@type":"Service",name:s.title,url:SITE_URL+"/solucoes/"+s.slug,description:s.description}}))}},faqSchema(FAQ_HOME,path));
+ }else{
+  const s=solutions.find(s=>path==="/solucoes/"+s.slug),a=articles.find(a=>path==="/conteudos/"+a.slug);
+  if(s){title=s.title+" para incorporadoras | PIPADriven";description=s.description;label=s.title;graph.push({"@type":"Service","@id":SITE_URL+path+"#service",name:s.title,serviceType:s.title,description:s.longDescription,url:SITE_URL+path,provider:{"@id":orgId},areaServed:{"@type":"Country",name:"Brasil"}},breadcrumbs(path,label),faqSchema(s.faq,path));}
+  else if(a){title=a.title+" | PIPADriven";description=a.description;label=a.title;type="article";graph.push({"@type":"Article","@id":SITE_URL+path+"#article",headline:a.title,description:a.description,datePublished:UPDATED_AT,dateModified:UPDATED_AT,inLanguage:"pt-BR",author:{"@id":orgId},publisher:{"@id":orgId},mainEntityOfPage:{"@id":SITE_URL+path+"#webpage"},articleSection:a.category},breadcrumbs(path,label,{path:"/conteudos",label:"Conteúdos"}));}
+  else if(path==="/sobre"){title="A PIPA | Tecnologia e inteligência comercial imobiliária";description="Conheça a visão da PIPADriven: tecnologia aplicada, relações próximas e dados para conectar a operação comercial de incorporadoras.";label="A PIPA";graph.push(breadcrumbs(path,label));}
+  else if(path==="/conteudos"){title="Conteúdos sobre inteligência comercial imobiliária | PIPADriven";description="Perspectivas da PIPADriven sobre gestão da rede de corretores, atendimento, indicadores e decisões comerciais para incorporadoras.";label="Conteúdos";graph.push(breadcrumbs(path,label));}
+  else if(path==="/privacidade"){title="Privacidade e preferências | PIPADriven";description="Informações sobre contato, navegação e preferências de cookies no site da PIPADriven.";label="Privacidade";graph.push(breadcrumbs(path,label));}
+  else{title="Página não encontrada | PIPADriven";description="Este endereço não está disponível. Explore as soluções da PIPADriven.";noIndex=true;}
+ }
+ graph.push({"@type":path==="/sobre"?"AboutPage":path==="/conteudos"?"CollectionPage":"WebPage","@id":SITE_URL+path+"#webpage",url:SITE_URL+path,name:title,description,inLanguage:"pt-BR",isPartOf:{"@id":SITE_URL+"/#website"},about:{"@id":orgId}});
+ return {title,description,path,jsonLd:{"@context":"https://schema.org","@graph":graph},noIndex,type};
+}
+export const HOME_SEO={title:"PIPADriven | Inteligência comercial para incorporadoras",description:SITE_DESCRIPTION,path:"/"};
+export const HOME_JSONLD=getPageSeo("/").jsonLd;
+export function getSolutionSeo(slug:string,fallbackTitle:string,fallbackDescription:string){const s=solutions.find(s=>s.slug===slug);const meta=getPageSeo("/solucoes/"+slug);return {title:s?meta.title:fallbackTitle,description:s?meta.description:fallbackDescription,term:{name:s?.title??fallbackTitle,description:s?.longDescription??fallbackDescription}};}
+export const routes=["/",...solutions.map(s=>"/solucoes/"+s.slug),"/sobre","/conteudos",...articles.map(a=>"/conteudos/"+a.slug),"/privacidade"];

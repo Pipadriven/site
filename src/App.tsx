@@ -1,29 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import SolutionDetail from "./pages/SolutionDetail";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-        <Route path="/solucoes/:slug" element={<SolutionDetail />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+import { Routes, Route } from "react-router-dom";
+import { HomePage, SolutionPage, AboutPage, ContentPage, ArticlePage, PrivacyPage, NotFoundPage } from "@/components/PipaSite";
+export default function App(){return <Routes><Route path="/" element={<HomePage/>}/><Route path="/solucoes/:slug" element={<SolutionPage/>}/><Route path="/sobre" element={<AboutPage/>}/><Route path="/conteudos" element={<ContentPage/>}/><Route path="/conteudos/:slug" element={<ArticlePage/>}/><Route path="/privacidade" element={<PrivacyPage/>}/><Route path="*" element={<NotFoundPage/>}/></Routes>;}

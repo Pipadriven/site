@@ -1,271 +1,32 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, Link } from "react-router-dom";
+import { ArrowUpRight, ArrowRight, Check, Loader2, MessageSquare } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { z } from "zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { solutions } from "@/data/solutions";
+import { leadSchema, sendLead } from "@/lib/leads";
+import { whatsappUrl, trackWhatsAppClick } from "@/lib/whatsapp";
 
-// Validation schema for lead form
-const leadSchema = z.object({
-  name: z.string().trim().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo"),
-  company: z.string().trim().min(2, "Empresa deve ter pelo menos 2 caracteres").max(200, "Nome da empresa muito longo"),
-  phone: z.string().trim().max(20, "Telefone muito longo").optional().or(z.literal("")),
-});
-
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    phone: "",
-  });
-  const [website, setWebsite] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const location = useLocation();
-  const [solution, setSolution] = useState<string | null>(null);
-
-  // Captura a solução de origem e rola até o formulário
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const s = params.get("solution");
-    if (s) {
-      setSolution(s);
-      requestAnimationFrame(() => {
-        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-  }, [location.search]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrors({});
-    setIsLoading(true);
-
-    // Validate input with zod
-    const validationResult = leadSchema.safeParse(formData);
-    
-    if (!validationResult.success) {
-      const fieldErrors: Record<string, string> = {};
-      validationResult.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      setIsLoading(false);
-      toast({
-        title: "Dados inválidos",
-        description: "Por favor, corrija os erros no formulário.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const validatedData = validationResult.data;
-
-      // Honeypot: se preenchido, finge sucesso sem enviar
-      if (website.trim() !== "") {
-        toast({
-          title: "Mensagem enviada!",
-          description: "Entraremos em contato em breve.",
-        });
-        setFormData({ name: "", company: "", phone: "" });
-        return;
-      }
-
-      const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL;
-
-      // Falha explícita se a variável não foi definida no build
-      if (!webhookUrl || !/^https:\/\//.test(webhookUrl)) {
-        console.error(
-          "[PIPADriven] VITE_LEAD_WEBHOOK_URL ausente ou inválida no build."
-        );
-        throw new Error("webhook not configured");
-      }
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-
-      try {
-        const response = await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            nome: validatedData.name,
-            empresa: validatedData.company,
-            telefone: validatedData.phone || "",
-            origem: "site_formulario",
-            solucao: solution,
-            pagina: window.location.pathname,
-            referrer: document.referrer || null,
-            enviado_em: new Date().toISOString(),
-          }),
-        });
-
-        if (!response.ok) throw new Error("request failed");
-      } finally {
-        clearTimeout(timeout);
-      }
-
-      // Espelha o rastreio do WhatsApp para permitir comparar os dois funis
-      const w = window as Window & { dataLayer?: Record<string, unknown>[] };
-      w.dataLayer = w.dataLayer || [];
-      w.dataLayer.push({
-        event: "lead_form_submit",
-        cta_origin: "contact_form",
-        solution: solution ?? null,
-        page_path: window.location.pathname,
-      });
-
-      toast({
-        title: "Mensagem enviada!",
-        description: "Entraremos em contato em breve.",
-      });
-      setFormData({ name: "", company: "", phone: "" });
-    } catch (error) {
-      toast({
-        title: "Erro ao enviar",
-        description: "Não foi possível enviar sua mensagem. Tente novamente mais tarde.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const benefits = [
-    "Demonstração personalizada",
-    "Análise do seu cenário atual",
-    "Proposta sob medida",
-    "Suporte dedicado",
-  ];
-
-  return (
-    <section className="py-24 relative overflow-hidden" id="contact">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-glow opacity-30 pointer-events-none" />
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Content */}
-          <div>
-            <span className="inline-block text-primary text-sm font-semibold tracking-wider uppercase mb-4">
-              Entre em Contato
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              Pronto para dar o{" "}
-              <span className="gradient-text">próximo passo?</span>
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              Descubra como a inteligência artificial pode revolucionar seus 
-              resultados. Agende uma demonstração gratuita e veja na prática o 
-              poder dos nossos agentes.
-            </p>
-
-            <ul className="space-y-4">
-              {benefits.map((benefit, index) => (
-                <li key={index} className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span className="text-foreground">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Form */}
-          <div className="relative">
-            <div className="bg-card border border-border rounded-2xl p-8 card-glow">
-              <h3 className="text-2xl font-bold text-foreground mb-6">
-                Fale diretamente com um dos Sócios da PIPADriven
-              </h3>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Honeypot anti-spam */}
-                <div className="absolute w-px h-px overflow-hidden opacity-0 -z-10 pointer-events-none" aria-hidden="true">
-                  <input
-                    type="text"
-                    name="website"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                </div>
-                <div>
-                    <Input
-                      placeholder="Seu nome"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      required
-                      maxLength={100}
-                      className={`bg-secondary border-border focus:border-primary ${errors.name ? 'border-destructive' : ''}`}
-                    />
-                    {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
-                </div>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <Input
-                      placeholder="Empresa"
-                      value={formData.company}
-                      onChange={(e) =>
-                        setFormData({ ...formData, company: e.target.value })
-                      }
-                      required
-                      maxLength={200}
-                      className={`bg-secondary border-border focus:border-primary ${errors.company ? 'border-destructive' : ''}`}
-                    />
-                    {errors.company && <p className="text-xs text-destructive mt-1">{errors.company}</p>}
-                  </div>
-                  <div>
-                    <Input
-                      type="tel"
-                      placeholder="Telefone"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
-                      }
-                      maxLength={20}
-                      className={`bg-secondary border-border focus:border-primary ${errors.phone ? 'border-destructive' : ''}`}
-                    />
-                    {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
-                  </div>
-                </div>
-
-                <Button variant="hero" size="lg" className="w-full group" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    <>
-                      Solicitar demonstração
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  Ao enviar, você concorda com nossa política de privacidade.
-                </p>
-              </form>
-            </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -z-10 -top-4 -right-4 w-full h-full bg-primary/10 rounded-2xl" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default Contact;
+export default function Contact({defaultSolution=""}:{defaultSolution?:string}) {
+ const location=useLocation();
+ const [data,setData]=useState({name:"",company:"",phone:""});
+ const [solution,setSolution]=useState(defaultSolution);
+ const [website,setWebsite]=useState("");
+ const [errors,setErrors]=useState<Record<string,string>>({});
+ const [status,setStatus]=useState<"idle"|"loading"|"success"|"error">("idle");
+ const sending=useRef(false);
+ useEffect(()=>{const query=new URLSearchParams(location.search).get("solution");setSolution(defaultSolution||solutions.find(s=>s.slug===query)?.title||"");},[defaultSolution,location.search]);
+ async function submit(event:React.FormEvent<HTMLFormElement>) {
+   event.preventDefault();if(sending.current)return;setErrors({});
+   const parsed=leadSchema.safeParse(data);
+   if(!parsed.success){const issues:Record<string,string>={};for(const err of parsed.error.errors)issues[String(err.path[0])]=err.message;setErrors(issues);setStatus("idle");const first=parsed.error.errors[0]?.path[0];document.getElementById("lead-"+String(first))?.focus();return;}
+   if(website.trim()){setStatus("success");return;}
+   sending.current=true;setStatus("loading");
+   try{
+     await sendLead(parsed.data,solution,{pagePath:location.pathname,search:location.search,referrer:document.referrer});
+     const w=window as Window&{dataLayer?:Record<string,unknown>[]};w.dataLayer=w.dataLayer||[];w.dataLayer.push({event:"lead_form_submit",cta_origin:"contact_form",solution:solution||null,page_path:location.pathname});
+     setStatus("success");setData({name:"",company:"",phone:""});
+   }catch{setStatus("error");}finally{sending.current=false;}
+ }
+ return <section className="contact-section" id="contact"><div className="shell contact-grid"><div className="contact-copy"><p className="eyebrow"><span aria-hidden="true"/>A próxima etapa começa aqui</p><h2>Vamos olhar para<br/><em>a sua operação?</em></h2><p>Converse diretamente com a PIPA. Entendemos o seu cenário e mostramos onde nossas soluções podem fazer diferença.</p><ul><li><Check size={18}/>Diagnóstico do seu momento</li><li><Check size={18}/>Demonstração aplicada à sua realidade</li><li><Check size={18}/>Escopo alinhado às suas prioridades</li></ul><a className="text-link" href={whatsappUrl("hero")} target="_blank" rel="noopener noreferrer" onClick={()=>trackWhatsAppClick("hero")}><MessageSquare size={19}/>Prefiro conversar pelo WhatsApp<ArrowUpRight size={18}/></a></div><div className="contact-card">{status==="success"?<div className="form-success" role="status"><span><Check size={32}/></span><h3>Recebemos seu contato.</h3><p>A PIPA vai conversar com você sobre o seu cenário. Se preferir, continue pelo WhatsApp.</p><a className="cta" href={whatsappUrl("solution_detail",solution||"inteligência comercial")} target="_blank" rel="noopener noreferrer" onClick={()=>trackWhatsAppClick("solution_detail",solution)}>Abrir WhatsApp<ArrowUpRight size={18}/></a><button className="text-link" onClick={()=>setStatus("idle")}>Enviar outro contato</button></div>:<><p className="card-category">UM PRIMEIRO PASSO, SEM COMPLICAÇÃO</p><h3>Conte um pouco sobre você.</h3><noscript><p className="form-error">Para falar com a PIPA, <a href="https://wa.me/5547992663388">abra nosso WhatsApp</a>.</p></noscript><form onSubmit={submit} noValidate><div className="honeypot" aria-hidden="true"><label>Website<input name="website" value={website} onChange={e=>setWebsite(e.target.value)} tabIndex={-1} autoComplete="off"/></label></div>{[{name:"name",label:"Seu nome",placeholder:"Como podemos te chamar?",auto:"name"},{name:"company",label:"Empresa",placeholder:"Nome da incorporadora",auto:"organization"},{name:"phone",label:"WhatsApp com DDD",placeholder:"(47) 99999-9999",auto:"tel"}].map(field=><div className="form-field" key={field.name}><label htmlFor={"lead-"+field.name}>{field.label}</label><Input id={"lead-"+field.name} name={field.name} type={field.name==="phone"?"tel":"text"} inputMode={field.name==="phone"?"tel":"text"} autoComplete={field.auto} maxLength={field.name==="phone"?25:field.name==="name"?100:200} required value={data[field.name as keyof typeof data]} onChange={e=>setData({...data,[field.name]:e.target.value})} placeholder={field.placeholder} aria-invalid={!!errors[field.name]} aria-describedby={errors[field.name]?"error-"+field.name:undefined}/>{errors[field.name]&&<p id={"error-"+field.name} className="field-error">{errors[field.name]}</p>}</div>)}<div className="form-field"><label htmlFor="lead-solution">O que você quer melhorar? <span>(opcional)</span></label><Select value={solution} onValueChange={setSolution}><SelectTrigger id="lead-solution" className="form-select"><SelectValue placeholder="Selecione uma frente"/></SelectTrigger><SelectContent>{solutions.map(s=><SelectItem key={s.slug} value={s.title}>{s.title}</SelectItem>)}<SelectItem value="Entender o melhor ponto de partida">Quero entender o melhor ponto de partida</SelectItem></SelectContent></Select></div>{status==="error"&&<p className="form-error" role="alert">Não conseguimos enviar agora. Tente novamente ou <a href={whatsappUrl("hero")} target="_blank" rel="noopener noreferrer">fale com a PIPA pelo WhatsApp</a>.</p>}<button className="cta form-submit" type="submit" disabled={status==="loading"}>{status==="loading"?<>Enviando<Loader2 className="spin" size={18}/></>:<>Quero conhecer a PIPA<ArrowRight size={18}/></>}</button><p className="form-privacy">Ao enviar, você solicita um contato da PIPA. Saiba como usamos as informações em <Link to="/privacidade">Privacidade</Link>.</p></form></>}</div></div></section>;
+}
